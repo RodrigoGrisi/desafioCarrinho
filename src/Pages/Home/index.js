@@ -1,16 +1,110 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { useState, useContext } from 'react'
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+
+import { Feather } from '@expo/vector-icons'
+import Product from '../../components/Product'
+import { CartContext } from '../../context/CartContext'
 
 export default function Home() {
+
+  const { cart, addItemCart } = useContext(CartContext)
+
+  const navigation = useNavigation();
+
+  const [products, setProducts] = useState([
+    {
+      id: '1',
+      name: "Coca cola",
+      price: 19.90
+    },
+    {
+      id: '2',
+      name: "Chocolate",
+      price: 6.50
+    },
+    {
+      id: '4',
+      name: "Queijo 500g",
+      price: 15
+    },
+    {
+      id: '5',
+      name: "Batata frita",
+      price: 23.90
+    },
+    {
+      id: '6',
+      name: "Guarana lata",
+      price: 6.00
+    },
+  ])
+
+  function HandleAddCart(item) {
+    addItemCart(item);
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Página Home</Text>
-    </View>
+    <SafeAreaView style={stlyes.container}>
+      <View style={stlyes.cartContent}>
+        <Text style={stlyes.title}>Lista de produtos</Text>
+
+        <TouchableOpacity style={stlyes.cartButton} onPress={() => navigation.navigate('Cart')}>
+
+          {cart.length > 0 ? (
+            <View style={stlyes.dot}>
+              <Text style={stlyes.dotText}>{cart?.length}</Text>
+            </View>
+          ) : ""}
+
+          <Feather name="shopping-cart" size={30} color="#000" />
+        </TouchableOpacity>
+
+      </View>
+
+      <FlatList
+        style={stlyes.list}
+        data={products}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => <Product addToCart={() => HandleAddCart(item)} data={item} />}
+      />
+
+    </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
+const stlyes = StyleSheet.create({
   container: {
-
+    flex: 1,
+    backgroundColor: '#FAFAFA',
+    paddingEnd: 14,
+    paddingStart: 14,
+  },
+  cartContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 24,
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold'
+  },
+  dot: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "red",
+    width: 22,
+    height: 22,
+    borderRadius: 12,
+    position: 'absolute',
+    zIndex: 99,
+    bottom: -2,
+    left: -4,
+  },
+  dotText: {
+    fontSize: 15,
+    color: "#fff"
   }
 })

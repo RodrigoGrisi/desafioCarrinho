@@ -2,12 +2,29 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-const routes = () => {
+import Home from '../Pages/Home'
+import Cart from '../Pages/Cart'
+
+function Routes() {
+
+  const Stack = createNativeStackNavigator();
+
   return (
-    <View>
-      <Text>routes</Text>
-    </View>
+      <Stack.Navigator>
+        <Stack.Screen name='Home'
+          component={Home}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen name='Cart'
+          component={Cart}
+          options={{
+            headerTitle: 'Meu carrinho'
+          }}
+        />
+      </Stack.Navigator>
   )
 }
 
-export default routes
+export default Routes
